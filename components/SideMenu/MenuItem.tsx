@@ -22,7 +22,7 @@ const MenuItem: React.FC<ItemProps> = ({
       onClick={() => setActiveItem(title)}
     >
       {active && (
-        <div className="absolute top-0 left-0 bottom-0 h-full w-[5px] bg-[#1977F3]" />
+        <div className="absolute top-0 left-0 bottom-0 h-full w-[5px] bg-[#1977F3] rounded-r-[2px]" />
       )}
       <div className="w-[21px] h-[21px] relative flex items-center justify-center">
         <Image src={icon} alt={`${title} icon`} layout="fill" />

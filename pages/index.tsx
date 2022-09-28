@@ -9,7 +9,7 @@ const Home: NextPage = () => {
         <div className="w-[82px]">
           <SideMenu />
         </div>
-        <div>
+        <div className="w-full">
           <TopNav />
           <Campaign />
         </div>
