@@ -6,7 +6,7 @@ import { menuItems } from "./menuItems";
 import MenuItem from "./MenuItem";
 
 const SideMenu = () => {
-  const [activeItem, setActiveItem] = useState("Home");
+  const [activeItem, setActiveItem] = useState("Campaign");
 
   return (
     <div className="w-[82px] bg-[#001738] h-screen fixed">
