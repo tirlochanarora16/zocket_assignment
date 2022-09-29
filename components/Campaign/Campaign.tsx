@@ -50,7 +50,7 @@ const Campaign = () => {
   const [showNewCampaign, setShowNewCampaign] = useState(false);
 
   return (
-    <div className="bg-[#F6F9FF] h-[calc(100vh-70px)] pl-[50px] pr-[53px] pt-10">
+    <div className="bg-[#F6F9FF] h-[calc(100vh-70px)] pl-[50px] pr-[53px] pt-10 overflow-scroll overflow-x-hidden">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-bold text-2xl">

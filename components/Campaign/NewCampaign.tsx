@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { BsCheckCircleFill } from "react-icons/bs";
 
 import lamp from "../../public/svg/lamp.svg";
 import basket from "../../public/svg/basket.svg";
 import calendar from "../../public/svg/calendar.svg";
 import ready from "../../public/svg/ready.svg";
+import { step0data } from "./data";
 
 interface StepProps {
   currentStep: number;
@@ -68,6 +70,14 @@ const FormStep: React.FC<StepImg> = ({
 
 const NewCampaign = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [goal, setGoal] = useState(0);
+
+  const titles = [
+    "What you want to do",
+    "Choose product",
+    "Campaign settings",
+    "Ready to go",
+  ];
 
   return (
     <div className="mt-[45px]">
@@ -96,6 +106,56 @@ const NewCampaign = () => {
           icon={ready}
           title="Ready to go"
         />
+      </div>
+
+      <div className="bg-white rounded-[10px] mt-16 p-8 mb-6">
+        <div className="flex items-center border-b-[1.5px] border-b-[#EAEAEA] pb-[5px]">
+          <h2 className="font-bold text-[16px] leading-5">
+            {titles[currentStep]}
+          </h2>
+          <p className="text-[14px] leading-8 text-black/50 ml-2">
+            Step ({currentStep + 1} of 4)
+          </p>
+        </div>
+
+        <div className="mt-6 grid grid-cols-3 gap-3 cursor-pointer">
+          {step0data.map((item, index) => (
+            <div
+              key={index}
+              className={`relative flex items-center border-[1.5px] border-[#F3F3F3] px-3 py-4 rounded-[10px] ${
+                goal === index ? "bg-[#E7F0FF4D] border-[#0F6EFF]" : ""
+              } `}
+              onClick={() => setGoal(index)}
+            >
+              {goal === index && (
+                <div className="absolute -top-1 -right-1 z-10 w-5 h-5">
+                  <BsCheckCircleFill className="text-[#0F6EFF] w-full h-full" />
+                </div>
+              )}
+              <div className="w-[22px] h-[22px] flex items-center justify-center">
+                {item.icon}
+              </div>
+              <div className="ml-[17px]">
+                <p className="text-[#0B1A33] font-[500] text-[16px] leading-5">
+                  {item.title}
+                </p>
+                <p className="text-black/50 text-[13px] leading-4">
+                  {item.text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          className="w-[237px] h-[50px] bg-[#0F6EFF] flex items-center justify-center mb-5 rounded-[10px] text-white"
+          onClick={() => setCurrentStep(currentStep + 1)}
+        >
+          Continue
+        </button>
       </div>
     </div>
   );
