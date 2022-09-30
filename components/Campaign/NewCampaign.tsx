@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 
+import CampaignGoal from "./CampaignGoal";
+import CampaignProduct from "./CampaignProduct";
+import CampaignSettings from "./CampaignSettings";
+
 import lamp from "../../public/svg/lamp.svg";
 import basket from "../../public/svg/basket.svg";
 import calendar from "../../public/svg/calendar.svg";
 import ready from "../../public/svg/ready.svg";
-import CampaignGoal from "./CampaignGoal";
-import CampaignProduct from "./CampaignProduct";
 
 interface StepProps {
   currentStep: number;
@@ -140,6 +142,7 @@ const NewCampaign = () => {
             setSelectedProduct={setSelectedProduct}
           />
         )}
+        {currentStep === 2 && <CampaignSettings />}
       </div>
 
       <div className="flex justify-end">
