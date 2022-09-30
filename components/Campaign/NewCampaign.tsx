@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { BsCheckCircleFill } from "react-icons/bs";
+import axios from "axios";
 
 import lamp from "../../public/svg/lamp.svg";
 import basket from "../../public/svg/basket.svg";
 import calendar from "../../public/svg/calendar.svg";
 import ready from "../../public/svg/ready.svg";
-import { step0data } from "./data";
+import CampaignGoal from "./CampaignGoal";
+import CampaignProduct from "./CampaignProduct";
 
 interface StepProps {
   currentStep: number;
@@ -71,6 +72,19 @@ const FormStep: React.FC<StepImg> = ({
 const NewCampaign = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [goal, setGoal] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(0);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await axios.get("/api/allProducts");
+      const { data } = response;
+
+      setProducts(data);
+    };
+
+    fetchProducts();
+  }, []);
 
   const titles = [
     "What you want to do",
@@ -118,34 +132,14 @@ const NewCampaign = () => {
           </p>
         </div>
 
-        <div className="mt-6 grid grid-cols-3 gap-3 cursor-pointer">
-          {step0data.map((item, index) => (
-            <div
-              key={index}
-              className={`relative flex items-center border-[1.5px] border-[#F3F3F3] px-3 py-4 rounded-[10px] ${
-                goal === index ? "bg-[#E7F0FF4D] border-[#0F6EFF]" : ""
-              } `}
-              onClick={() => setGoal(index)}
-            >
-              {goal === index && (
-                <div className="absolute -top-1 -right-1 z-10 w-5 h-5">
-                  <BsCheckCircleFill className="text-[#0F6EFF] w-full h-full" />
-                </div>
-              )}
-              <div className="w-[22px] h-[22px] flex items-center justify-center">
-                {item.icon}
-              </div>
-              <div className="ml-[17px]">
-                <p className="text-[#0B1A33] font-[500] text-[16px] leading-5">
-                  {item.title}
-                </p>
-                <p className="text-black/50 text-[13px] leading-4">
-                  {item.text}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {currentStep === 0 && <CampaignGoal setGoal={setGoal} goal={goal} />}
+        {currentStep === 1 && (
+          <CampaignProduct
+            products={products}
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+          />
+        )}
       </div>
 
       <div className="flex justify-end">
