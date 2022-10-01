@@ -20,8 +20,8 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [campaignBudget, setCampaignBudget] = useState(100);
-
-  console.log(campaignBudget);
+  const [locationName, setLocationName] = useState("");
+  const [locationRadius, setLocationRadius] = useState(0);
 
   useEffect(() => {
     if (goal == 0 || goal == 6 || goal == 8) {
@@ -46,6 +46,8 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         startDate,
         endDate,
         campaignBudget,
+        locationName,
+        locationRadius,
         setLocationType,
         setCampaignReadyValue,
         setGoal,
@@ -54,6 +56,8 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         setStartDate,
         setEndDate,
         setCampaignBudget,
+        setLocationName,
+        setLocationRadius,
       }}
     >
       {children}

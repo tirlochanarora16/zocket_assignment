@@ -30,6 +30,8 @@ const CampaignNumberAndTitle: React.FC<CampaignNumberAndTitleProps> = ({
 };
 
 const LocationInput = () => {
+  const { locationName, setLocationName }: any = useStore();
+
   return (
     <>
       <label
@@ -40,10 +42,12 @@ const LocationInput = () => {
       </label>
       <div className="w-[744px] relative">
         <input
+          value={locationName}
           type="text"
           id="locationName"
           className="block border-[1.5px] border-[#E9E9E9] focus:outline-none w-full h-[50px] px-4 rounded-[10px]"
           placeholder="Select a place name, address or coordinates"
+          onChange={(e) => setLocationName(e.target.value)}
         />
         <div className="absolute top-1/2 -translate-y-1/2 right-4">
           <Image src={locationSvg} alt="location icon" />
@@ -54,6 +58,8 @@ const LocationInput = () => {
 };
 
 const LocationRadius = () => {
+  const { locationRadius, setLocationRadius }: any = useStore();
+
   return (
     <div className="w-[744px]">
       <label
@@ -63,6 +69,7 @@ const LocationRadius = () => {
         Select target radius
       </label>
       <Slider
+        value={locationRadius}
         min={1}
         max={30}
         step={1}
@@ -73,6 +80,7 @@ const LocationRadius = () => {
           { label: "30", value: 30 },
         ]}
         valueLabelFormat={(val) => `${val} Km`}
+        onChange={(e: any) => setLocationRadius(e.target.value)}
       />
     </div>
   );
