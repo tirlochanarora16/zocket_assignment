@@ -1,16 +1,14 @@
-import Image from "next/image";
 import React, { useState } from "react";
+import Image from "next/image";
 import Switch from "react-switch";
+import axios from "axios";
+import { useRouter } from "next/router";
 import { AiOutlinePlus, AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
 import { FaFacebook, FaYoutube, FaInstagram } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Campaign } from "../../pages";
 import { useStore } from "../../store/store";
-
-interface IProps {
-  campaigns: Campaign[];
-}
 
 interface JProps {
   isCampaignOn: boolean;
@@ -45,10 +43,17 @@ const SwitchButton: React.FC<JProps> = ({ isCampaignOn }) => {
 const Table = () => {
   const { allCampaigns }: any = useStore();
 
+  const router = useRouter();
+
   const formatCurrency = new Intl.NumberFormat("en-us", {
     currency: "INR",
     style: "currency",
   });
+
+  const deleteCampaign = async (id: string) => {
+    await axios.post(`/api/deleteCampaign`, { id });
+    router.reload();
+  };
 
   return (
     <div className="w-full mt-[22px]">
@@ -169,7 +174,10 @@ const Table = () => {
                   <td className="text-center">{status}</td>
                   <td className="flex items-center gap-4">
                     <BiEditAlt className="text-[#0F6EFF] w-[21px] h-[21px] cursor-pointer" />
-                    <AiOutlineDelete className="text-[#FC3F3F] w-[21px] h-[21px] cursor-pointer" />
+                    <AiOutlineDelete
+                      className="text-[#FC3F3F] w-[21px] h-[21px] cursor-pointer"
+                      onClick={deleteCampaign.bind(null, campaign._id)}
+                    />
                   </td>
                 </tr>
               );
