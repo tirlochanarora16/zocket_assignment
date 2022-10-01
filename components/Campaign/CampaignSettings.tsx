@@ -2,38 +2,87 @@ import React, { useState } from "react";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import Slider from "@mui/material/Slider";
+import { useStore } from "../../store/store";
+import SwitchButtonContainer from "./SwitchButton";
 
 import calendarBlack from "../../public/svg/calendar-2.svg";
+import locationSvg from "../../public/svg/location.svg";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-interface TimelineButtonProps {
-  text: string;
-  selectedTimeline: string;
-  changeTimeline: React.Dispatch<React.SetStateAction<string>>;
+interface CampaignNumberAndTitleProps {
+  count: number;
+  title: string;
 }
 
-const TimeLineButton: React.FC<TimelineButtonProps> = ({
-  text,
-  selectedTimeline,
-  changeTimeline,
+const CampaignNumberAndTitle: React.FC<CampaignNumberAndTitleProps> = ({
+  count,
+  title,
 }) => {
   return (
-    <p
-      className={`flex-1 flex items-center justify-center z-10 cursor-pointe capitalize cursor-pointer ${
-        selectedTimeline === text ? "text-white" : "text-[#999999]"
-      }`}
-      onClick={() => changeTimeline(text)}
-    >
-      {text}
-    </p>
+    <div className="flex items-center">
+      <p className="w-6 h-6 bg-[#0F6EFF] text-center rounded-full text-white mr-[9px]">
+        {count}
+      </p>
+      <p className="font-[500] text-[14px] leading-8 underline">{title}</p>
+    </div>
+  );
+};
+
+const LocationInput = () => {
+  return (
+    <>
+      <label
+        htmlFor="locationName"
+        className="text-[#606060] font-[500] text-[12px] leading-8"
+      >
+        Select Location
+      </label>
+      <div className="w-[744px] relative">
+        <input
+          type="text"
+          id="locationName"
+          className="block border-[1.5px] border-[#E9E9E9] focus:outline-none w-full h-[50px] px-4 rounded-[10px]"
+          placeholder="Select a place name, address or coordinates"
+        />
+        <div className="absolute top-1/2 -translate-y-1/2 right-4">
+          <Image src={locationSvg} alt="location icon" />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const LocationRadius = () => {
+  return (
+    <div className="w-[744px]">
+      <label
+        htmlFor="location"
+        className="text-[#606060] font-[500] text-[12px] leading-8"
+      >
+        Select target radius
+      </label>
+      <Slider
+        min={1}
+        max={30}
+        step={1}
+        aria-label="location"
+        valueLabelDisplay="auto"
+        marks={[
+          { label: "1", value: 1 },
+          { label: "30", value: 30 },
+        ]}
+        valueLabelFormat={(val) => `${val} Km`}
+      />
+    </div>
   );
 };
 
 const CampaignSettings = () => {
-  const [budgetTimeline, setBudgetTimeline] = useState("lifetime");
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+
+  const { locationType }: any = useStore();
 
   const formatter = new Intl.NumberFormat("en-us", {
     style: "currency",
@@ -43,37 +92,15 @@ const CampaignSettings = () => {
   return (
     <div className="mt-6">
       <div className="">
-        <div className="flex items-center">
-          <p className="w-6 h-6 bg-[#0F6EFF] text-center rounded-full text-white mr-[9px]">
-            1
-          </p>
-          <p className="font-[500] text-[14px] leading-8 underline">
-            Budget and dates info
-          </p>
-        </div>
+        <CampaignNumberAndTitle count={1} title="Budget and dates info" />
 
-        <div className="pl-9">
-          <p className="text-[#606060] font-[500] text-[12px] leading-8">
-            Budget Timeline
-          </p>
-          <div className="flex w-[229px] h-[39px] relative bg-[#F0F0F0] rounded-[48px]">
-            <TimeLineButton
-              text="lifetime"
-              selectedTimeline={budgetTimeline}
-              changeTimeline={setBudgetTimeline}
-            />
-            <TimeLineButton
-              text="daily"
-              selectedTimeline={budgetTimeline}
-              changeTimeline={setBudgetTimeline}
-            />
-
-            <div
-              className={`absolute h-full w-1/2 bg-[#0F6EFF] rounded-full ${
-                budgetTimeline === "lifetime" ? "left-0" : "right-0"
-              }`}
-            />
-          </div>
+        <div className="pl-9 mb-6">
+          <SwitchButtonContainer
+            text="lifetime"
+            title="Budget Timeline"
+            firstButtonText="lifetime"
+            secondButtonText="daily"
+          />
 
           <div className="mt-4 flex gap-4">
             <div className="relative w-[363px]">
@@ -117,8 +144,13 @@ const CampaignSettings = () => {
             </div>
           </div>
 
-          <div className="mt-4 pr-[94px]">
-            <label htmlFor="budget">Enter campaign budget</label>
+          <div className="mt-4 w-[744px]">
+            <label
+              htmlFor="budget"
+              className="text-[#606060] font-[500] text-[12px] leading-8"
+            >
+              Enter campaign budget
+            </label>
             <Slider
               aria-label="budget"
               valueLabelDisplay="auto"
@@ -132,6 +164,22 @@ const CampaignSettings = () => {
               step={500}
               valueLabelFormat={(val) => `${formatter.format(val)}`}
             />
+          </div>
+        </div>
+
+        <CampaignNumberAndTitle count={2} title="Location info" />
+
+        <div className="pl-9 mb-6">
+          <SwitchButtonContainer
+            text="location"
+            title="Location type"
+            firstButtonText="location"
+            secondButtonText="radius"
+            type="location"
+          />
+          <div className="mt-4">
+            {locationType === "location" && <LocationInput />}
+            {locationType === "radius" && <LocationRadius />}
           </div>
         </div>
       </div>
