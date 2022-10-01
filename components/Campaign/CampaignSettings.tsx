@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
+import Slider from "@mui/material/Slider";
 
 import calendarBlack from "../../public/svg/calendar-2.svg";
 
@@ -34,7 +35,10 @@ const CampaignSettings = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
 
-  console.log(startDate);
+  const formatter = new Intl.NumberFormat("en-us", {
+    style: "currency",
+    currency: "INR",
+  });
 
   return (
     <div className="mt-6">
@@ -84,7 +88,7 @@ const CampaignSettings = () => {
                 id="startDate"
                 startDate={startDate}
                 onChange={(date) => setStartDate(date)}
-                minDate={startDate}
+                minDate={new Date()}
                 className="w-full h-[50px] border-[1.5px] border-[#E9E9E9] focus:outline-none z-20 rounded-[10px]"
               />
               <div className="absolute top-1/2 right-4">
@@ -104,13 +108,30 @@ const CampaignSettings = () => {
                 startDate={startDate}
                 endDate={endDate}
                 minDate={startDate}
-                onChange={(date) => setStartDate(date)}
+                onChange={(date) => setEndDate(date)}
                 className="w-full h-[50px] border-[1.5px] border-[#E9E9E9] focus:outline-none z-20 rounded-[10px]"
               />
               <div className="absolute top-1/2 right-4">
                 <Image src={calendarBlack} alt="calendar icon" />
               </div>
             </div>
+          </div>
+
+          <div className="mt-4 pr-[94px]">
+            <label htmlFor="budget">Enter campaign budget</label>
+            <Slider
+              aria-label="budget"
+              valueLabelDisplay="auto"
+              getAriaValueText={(val) => `Rs.${val}`}
+              marks={[
+                { value: 100, label: formatter.format(100) },
+                { value: 100000, label: formatter.format(100000) },
+              ]}
+              min={100}
+              max={100000}
+              step={500}
+              valueLabelFormat={(val) => `${formatter.format(val)}`}
+            />
           </div>
         </div>
       </div>
