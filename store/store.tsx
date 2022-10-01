@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { Campaign } from "../pages";
 
 interface IProps {
   children: React.ReactNode;
@@ -26,8 +27,7 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
   const [locationRadius, setLocationRadius] = useState(0);
   const [sendingData, setSendingData] = useState(false);
   const [showNewCampaign, setShowNewCampaign] = useState(false);
-
-  const router = useRouter();
+  const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
     if (goal == 0 || goal == 6 || goal == 8) {
@@ -41,6 +41,8 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
     }
   }, [goal]);
 
+  const router = useRouter();
+
   const createNewCampaign = async () => {
     const product: { _id: string } = products[selectedProduct];
     const campaignStart = new Date(startDate).getTime();
@@ -48,7 +50,7 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
     try {
       setSendingData(true);
 
-      await axios.post("/api/newCampaign", {
+      const data = {
         campaign: product._id,
         dateRange: {
           start: campaignStart,
@@ -57,10 +59,18 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         budget: +campaignBudget,
         location: locationName || locationRadius.toString(),
         platform: campaignGoal,
+      };
+
+      await axios.post("/api/newCampaign", data);
+
+      setAllCampaigns((previousCampaigns: any) => {
+        return [...previousCampaigns, data];
       });
 
       setSendingData(false);
       setShowNewCampaign(false);
+
+      router.reload();
     } catch (err) {
       console.log(err);
     }
@@ -81,6 +91,7 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         locationRadius,
         sendingData,
         showNewCampaign,
+        allCampaigns,
         setLocationType,
         setCampaignReadyValue,
         setGoal,
@@ -94,6 +105,7 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         createNewCampaign,
         setSendingData,
         setShowNewCampaign,
+        setAllCampaigns,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { IoAddCircleOutline } from "react-icons/io5";
 
@@ -8,11 +8,16 @@ import search from "../../public/svg/search.svg";
 import Table from "./Table";
 import NewCampaign from "./NewCampaign";
 import { useStore } from "../../store/store";
+import { Campaign } from "../../pages";
 
 interface SelectProps {
   title: string;
   options: string[];
   showTitle?: boolean;
+}
+
+interface IProps {
+  data: Campaign[];
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -47,9 +52,15 @@ const Select: React.FC<SelectProps> = ({
   );
 };
 
-const Campaign = () => {
-  // const [showNewCampaign, setShowNewCampaign] = useState(false);
-  const { showNewCampaign, setShowNewCampaign }: any = useStore();
+const Campaign: React.FC<IProps> = ({ data }) => {
+  const {
+    showNewCampaign,
+    setShowNewCampaign,
+    allCampaigns,
+    setAllCampaigns,
+  }: any = useStore();
+
+  setAllCampaigns(data);
 
   return (
     <div className="bg-[#F6F9FF] h-[calc(100vh-70px)] pl-[50px] pr-[53px] pt-10 overflow-scroll overflow-x-hidden">

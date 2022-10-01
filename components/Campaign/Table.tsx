@@ -1,14 +1,23 @@
 import Image from "next/image";
 import React, { useState } from "react";
+import Switch from "react-switch";
 import { AiOutlinePlus, AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
-import { FaFacebook } from "react-icons/fa";
-import Switch from "react-switch";
+import { FaFacebook, FaYoutube, FaInstagram } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Campaign } from "../../pages";
+import { useStore } from "../../store/store";
 
-import itemImg from "../../public/img/item.png";
+interface IProps {
+  campaigns: Campaign[];
+}
 
-const SwitchButton = () => {
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
+interface JProps {
+  isCampaignOn: boolean;
+}
+
+const SwitchButton: React.FC<JProps> = ({ isCampaignOn }) => {
+  const [isSwitchOn, setIsSwitchOn] = useState(isCampaignOn);
 
   return (
     <Switch
@@ -34,11 +43,17 @@ const SwitchButton = () => {
 };
 
 const Table = () => {
+  const { allCampaigns }: any = useStore();
+
+  const formatCurrency = new Intl.NumberFormat("en-us", {
+    currency: "INR",
+    style: "currency",
+  });
+
   return (
     <div className="w-full mt-[22px]">
       <table className="block w-full">
         <thead className="block w-full">
-          {/* <tr className="flex items-center bg-[#EAEAEA] w-full justify-between  py-2 px-[25px] rounded-[10px] [&>*]:text-black/50"> */}
           <tr className="rounded-[10px] [&>*]:text-black/50 bg-[#EAEAEA] py-2 grid grid-cols-[repeat(2,1fr),235px,170px,repeat(6,1fr)]">
             <th>
               <input type="checkbox" id="selectAll" />
@@ -55,38 +70,110 @@ const Table = () => {
           </tr>
         </thead>
         <tbody className="block w-full">
-          <tr className="py-2 w-full grid grid-cols-[repeat(2,1fr),235px,170px,repeat(6,1fr)] place-items-center">
-            <td>
-              <input type="checkbox" id="row-1" />
-            </td>
-            <td>
-              <SwitchButton />
-            </td>
-            <td className="flex items-center">
-              <div className="relative w-[58px] h-[54px] mr-[13px]">
-                <Image src={itemImg} alt="item img" layout="fill" />
-              </div>
-              <div>
-                <p className="font-[500] text-[14px] leading-8">
-                  Bluberry cake Campaign
-                </p>
-                <p className="text-[12px]">Created on 14 july</p>
-              </div>
-            </td>
+          {allCampaigns.length > 0 &&
+            allCampaigns.map((campaign: Campaign, index: number) => {
+              const startDate = campaign.dateRange.start;
+              const endDate = campaign.dateRange.end;
 
-            <td className="text-[14px] leading-8">25 jul 2020 - 01 Aug 2020</td>
-            <td className="text-center">300</td>
-            <td className="text-center">INR 3,400</td>
-            <td className="text-center">Chennai</td>
-            <td className="text-center">
-              <FaFacebook className="text-[#1977F3] w-[22px] h-[22px]" />
-            </td>
-            <td className="text-center">Live now</td>
-            <td className="flex items-center gap-4">
-              <BiEditAlt className="text-[#0F6EFF] w-[21px] h-[21px] cursor-pointer" />
-              <AiOutlineDelete className="text-[#FC3F3F] w-[21px] h-[21px] cursor-pointer" />
-            </td>
-          </tr>
+              const status = startDate < endDate ? "Live" : "Exhausted";
+
+              const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+              const startDateStr = new Date(startDate);
+              const endDateStr = new Date(endDate);
+
+              const displayStartDate =
+                startDateStr.getDate() +
+                " " +
+                monthNames[startDateStr.getMonth()] +
+                " " +
+                startDateStr.getFullYear();
+
+              const displayEndDate =
+                endDateStr.getDate() +
+                " " +
+                monthNames[endDateStr.getMonth()] +
+                " " +
+                endDateStr.getFullYear();
+
+              const createdAtStr = new Date(campaign.createdAt);
+
+              const displayCreatedAt =
+                createdAtStr.getDate() +
+                " " +
+                monthNames[createdAtStr.getMonth()];
+
+              return (
+                <tr
+                  className="py-2 w-full grid grid-cols-[repeat(2,1fr),235px,170px,repeat(6,1fr)] place-items-center border-b-2 border-[#EAEAEA]"
+                  key={index}
+                >
+                  <td>
+                    <input type="checkbox" id="row-1" />
+                  </td>
+                  <td>
+                    <SwitchButton isCampaignOn={campaign.isCampaignOn} />
+                  </td>
+                  <td className="flex items-center w-full">
+                    <div className="relative w-[58px] h-[54px] mr-[13px]">
+                      <Image
+                        src={campaign.campaign.imgUrl}
+                        alt="item img"
+                        layout="fill"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-[500] text-[12px] leading-8">
+                        {campaign.campaign.name}
+                      </p>
+                      <p className="text-[12px]">
+                        Created on {displayCreatedAt}
+                      </p>
+                    </div>
+                  </td>
+
+                  <td className="text-[14px] leading-8">
+                    {displayStartDate} - {displayEndDate}
+                  </td>
+                  <td className="text-center">300</td>
+                  <td className="text-center truncate">
+                    {formatCurrency.format(campaign.budget)}
+                  </td>
+                  <td className="text-center">{campaign.location}</td>
+                  <td className="text-center">
+                    {campaign.platform === "Facebook" && (
+                      <FaFacebook className="text-[#1977F3] w-[22px] h-[22px]" />
+                    )}
+                    {campaign.platform === "Google" && (
+                      <FcGoogle className="w-[22px] h-[22px]" />
+                    )}
+                    {campaign.platform === "Youtube" && (
+                      <FaYoutube className="text-red-700 w-[22px] h-[22px]" />
+                    )}
+                    {campaign.platform === "Instagram" && (
+                      <FaInstagram className="text-[#42229a] w-[22px] h-[22px]" />
+                    )}
+                  </td>
+                  <td className="text-center">{status}</td>
+                  <td className="flex items-center gap-4">
+                    <BiEditAlt className="text-[#0F6EFF] w-[21px] h-[21px] cursor-pointer" />
+                    <AiOutlineDelete className="text-[#FC3F3F] w-[21px] h-[21px] cursor-pointer" />
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>
