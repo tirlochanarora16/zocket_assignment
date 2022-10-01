@@ -79,10 +79,15 @@ const LocationRadius = () => {
 };
 
 const CampaignSettings = () => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
-
-  const { locationType }: any = useStore();
+  const {
+    locationType,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    setCampaignBudget,
+    campaignBudget,
+  }: any = useStore();
 
   const formatter = new Intl.NumberFormat("en-us", {
     style: "currency",
@@ -152,6 +157,8 @@ const CampaignSettings = () => {
               Enter campaign budget
             </label>
             <Slider
+              value={campaignBudget}
+              onChange={(e: any) => setCampaignBudget(e.target?.value)}
               aria-label="budget"
               valueLabelDisplay="auto"
               getAriaValueText={(val) => `Rs.${val}`}

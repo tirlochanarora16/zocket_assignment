@@ -2,28 +2,14 @@ import React from "react";
 import Image from "next/image";
 
 import { FaRegCheckCircle } from "react-icons/fa";
+import { useStore } from "../../store/store";
 
-type Product = {
-  _id: string;
-  imgUrl: string;
-  name: string;
-  price: number;
-};
+const CampaignProduct = () => {
+  const { products, selectedProduct, setSelectedProduct }: any = useStore();
 
-interface Iprops {
-  products: Product[];
-  selectedProduct: number;
-  setSelectedProduct: React.Dispatch<React.SetStateAction<number>>;
-}
-
-const CampaignProduct: React.FC<Iprops> = ({
-  products,
-  selectedProduct,
-  setSelectedProduct,
-}) => {
   return (
     <div className="mt-6 grid grid-cols-3 gap-3">
-      {products.map((product, index) => (
+      {products.map((product: any, index: number) => (
         <div
           key={index}
           className={`border-[1.5px] border-[#F3F3F3] rounded-[10px] flex items-center p-[13px] cursor-pointer ${

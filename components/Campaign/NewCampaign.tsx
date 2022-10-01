@@ -11,6 +11,7 @@ import basket from "../../public/svg/basket.svg";
 import calendar from "../../public/svg/calendar.svg";
 import ready from "../../public/svg/ready.svg";
 import CampaignReady from "./CampaignReady";
+import { useStore } from "../../store/store";
 
 interface StepProps {
   currentStep: number;
@@ -74,9 +75,7 @@ const FormStep: React.FC<StepImg> = ({
 
 const NewCampaign = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [goal, setGoal] = useState(0);
-  const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(0);
+  const { setProducts }: any = useStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -135,14 +134,8 @@ const NewCampaign = () => {
           </p>
         </div>
 
-        {currentStep === 0 && <CampaignGoal setGoal={setGoal} goal={goal} />}
-        {currentStep === 1 && (
-          <CampaignProduct
-            products={products}
-            selectedProduct={selectedProduct}
-            setSelectedProduct={setSelectedProduct}
-          />
-        )}
+        {currentStep === 0 && <CampaignGoal />}
+        {currentStep === 1 && <CampaignProduct />}
         {currentStep === 2 && <CampaignSettings />}
         {currentStep === 3 && <CampaignReady />}
       </div>

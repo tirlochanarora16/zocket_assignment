@@ -1,13 +1,11 @@
 import React from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { useStore } from "../../store/store";
 import { step0data } from "./data";
 
-interface IProps {
-  goal: number;
-  setGoal: React.Dispatch<React.SetStateAction<number>>;
-}
+const CampaignGoal = () => {
+  const { goal, setGoal }: any = useStore();
 
-const CampaignGoal: React.FC<IProps> = ({ goal, setGoal }) => {
   return (
     <div className="mt-6 grid grid-cols-3 gap-3 cursor-pointer">
       {step0data.map((item, index) => (
