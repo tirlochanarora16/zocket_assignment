@@ -5,13 +5,13 @@ import axios from "axios";
 import CampaignGoal from "./CampaignGoal";
 import CampaignProduct from "./CampaignProduct";
 import CampaignSettings from "./CampaignSettings";
+import { useStore } from "../../store/store";
 
 import lamp from "../../public/svg/lamp.svg";
 import basket from "../../public/svg/basket.svg";
 import calendar from "../../public/svg/calendar.svg";
 import ready from "../../public/svg/ready.svg";
 import CampaignReady from "./CampaignReady";
-import { useStore } from "../../store/store";
 
 interface StepProps {
   currentStep: number;
@@ -75,7 +75,7 @@ const FormStep: React.FC<StepImg> = ({
 
 const NewCampaign = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const { setProducts }: any = useStore();
+  const { setProducts, createNewCampaign, sendingData }: any = useStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -88,6 +88,14 @@ const NewCampaign = () => {
     fetchProducts();
   }, []);
 
+  const onClickHandler = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      createNewCampaign();
+    }
+  };
+
   const titles = [
     "What you want to do",
     "Choose product",
@@ -97,6 +105,11 @@ const NewCampaign = () => {
 
   return (
     <div className="mt-[45px]">
+      {sendingData && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center text-[40px] text-white font-bold">
+          Creating new Campaign...
+        </div>
+      )}
       <div className="flex items-center">
         <FormStep
           currentStep={currentStep}
@@ -144,7 +157,7 @@ const NewCampaign = () => {
         <button
           type="button"
           className="w-[237px] h-[50px] bg-[#0F6EFF] flex items-center justify-center mb-5 rounded-[10px] text-white"
-          onClick={() => setCurrentStep(currentStep + 1)}
+          onClick={onClickHandler}
         >
           {currentStep < 3 ? "Continue" : "Start Campaign"}
         </button>

@@ -7,6 +7,7 @@ import arrow from "../../public/svg/arrow.svg";
 import search from "../../public/svg/search.svg";
 import Table from "./Table";
 import NewCampaign from "./NewCampaign";
+import { useStore } from "../../store/store";
 
 interface SelectProps {
   title: string;
@@ -47,7 +48,8 @@ const Select: React.FC<SelectProps> = ({
 };
 
 const Campaign = () => {
-  const [showNewCampaign, setShowNewCampaign] = useState(false);
+  // const [showNewCampaign, setShowNewCampaign] = useState(false);
+  const { showNewCampaign, setShowNewCampaign }: any = useStore();
 
   return (
     <div className="bg-[#F6F9FF] h-[calc(100vh-70px)] pl-[50px] pr-[53px] pt-10 overflow-scroll overflow-x-hidden">

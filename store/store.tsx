@@ -1,4 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 interface IProps {
   children: React.ReactNode;
@@ -22,6 +24,10 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
   const [campaignBudget, setCampaignBudget] = useState(100);
   const [locationName, setLocationName] = useState("");
   const [locationRadius, setLocationRadius] = useState(0);
+  const [sendingData, setSendingData] = useState(false);
+  const [showNewCampaign, setShowNewCampaign] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (goal == 0 || goal == 6 || goal == 8) {
@@ -34,6 +40,31 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
       setCampaignGoal("Instagram");
     }
   }, [goal]);
+
+  const createNewCampaign = async () => {
+    const product: { _id: string } = products[selectedProduct];
+    const campaignStart = new Date(startDate).getTime();
+    const campaignEnd = new Date(endDate).getTime();
+    try {
+      setSendingData(true);
+
+      await axios.post("/api/newCampaign", {
+        campaign: product._id,
+        dateRange: {
+          start: campaignStart,
+          end: campaignEnd,
+        },
+        budget: +campaignBudget,
+        location: locationName || locationRadius.toString(),
+        platform: campaignGoal,
+      });
+
+      setSendingData(false);
+      setShowNewCampaign(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <storeContext.Provider
@@ -48,6 +79,8 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         campaignBudget,
         locationName,
         locationRadius,
+        sendingData,
+        showNewCampaign,
         setLocationType,
         setCampaignReadyValue,
         setGoal,
@@ -58,6 +91,9 @@ const StoreProvider: React.FC<IProps> = ({ children }) => {
         setCampaignBudget,
         setLocationName,
         setLocationRadius,
+        createNewCampaign,
+        setSendingData,
+        setShowNewCampaign,
       }}
     >
       {children}
