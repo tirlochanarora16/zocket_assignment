@@ -10,6 +10,7 @@ import lamp from "../../public/svg/lamp.svg";
 import basket from "../../public/svg/basket.svg";
 import calendar from "../../public/svg/calendar.svg";
 import ready from "../../public/svg/ready.svg";
+import CampaignReady from "./CampaignReady";
 
 interface StepProps {
   currentStep: number;
@@ -143,6 +144,7 @@ const NewCampaign = () => {
           />
         )}
         {currentStep === 2 && <CampaignSettings />}
+        {currentStep === 3 && <CampaignReady />}
       </div>
 
       <div className="flex justify-end">
@@ -151,7 +153,7 @@ const NewCampaign = () => {
           className="w-[237px] h-[50px] bg-[#0F6EFF] flex items-center justify-center mb-5 rounded-[10px] text-white"
           onClick={() => setCurrentStep(currentStep + 1)}
         >
-          Continue
+          {currentStep < 3 ? "Continue" : "Start Campaign"}
         </button>
       </div>
     </div>
