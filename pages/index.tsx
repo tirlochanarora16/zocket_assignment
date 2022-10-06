@@ -44,7 +44,9 @@ const Home: NextPage<IProps> = ({ data }) => {
 };
 
 export async function getServerSideProps() {
-  const response = await axios.get("http://localhost:8080/campaign/all");
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/campaign/all`
+  );
   const { data } = response;
 
   return {

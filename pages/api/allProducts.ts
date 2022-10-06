@@ -6,7 +6,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const response = await axios.get("http://localhost:8080/products/all");
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/all`
+    );
     const { data } = response;
 
     return res.status(200).json(data.products);

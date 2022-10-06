@@ -9,13 +9,16 @@ export default async function handler(
     if (req.method === "POST") {
       const { campaign, dateRange, budget, location, platform } = req.body;
 
-      const response = await axios.post("http://localhost:8080/campaign/new", {
-        campaign,
-        dateRange,
-        budget,
-        location,
-        platform,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/campaign/new`,
+        {
+          campaign,
+          dateRange,
+          budget,
+          location,
+          platform,
+        }
+      );
 
       const { data } = response;
 

@@ -9,7 +9,9 @@ export default async function handler(
     if (req.method === "POST") {
       const { id } = req.body;
 
-      await axios.delete(`http://localhost:8080/campaign/delete/${id}`);
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/campaign/delete/${id}`
+      );
       return res.status(200).end();
     }
   } catch (err) {
